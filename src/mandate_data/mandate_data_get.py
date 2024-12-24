@@ -1,10 +1,15 @@
-from fastapi import FastAPI
+from fastapi import APIRouter
+from src.routers.mandate_router import logger
 from src.utils.db_connection import conn
 
-app = FastAPI()
+mandate_get_router = APIRouter()
 
-@app.get("/mandate/")
+
+@mandate_get_router.get("/mandate/")
 async def get_mandate_data(business_partner_id: str | None = None, mandate_id: str | None = None ):
+
+    logger.info(f"Received GET request for meter_data")
+
     try:
         con = conn()
         cur = con.cursor()
@@ -41,6 +46,7 @@ async def get_mandate_data(business_partner_id: str | None = None, mandate_id: s
             con.close()
 
     return {"status_code": 200,
-            "body": {"message": f"Row is showed successfully"}}
+            "body": {"message": f" Row is showed successfully"}}
+
 
 

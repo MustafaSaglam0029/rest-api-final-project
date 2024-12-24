@@ -1,16 +1,17 @@
-from fastapi import FastAPI
 import json
 from psycopg2.extras import Json
 from src.models.meter_readings_model import MeterReadings
+from fastapi import APIRouter
 from src.utils.db_connection import conn
+from src.routers.meter_readings_router import logger
+
+readings_post_router = APIRouter()
 
 
-
-app = FastAPI()
-
-
-@app.post('/meter_readings/')
+@readings_post_router.post('/meter_readings/')
 async def post_meter_readings_data(meter_readings_data:MeterReadings):
+
+        logger.info(f"Received POST request for meter_readings_data")
 
         json_data = meter_readings_data.model_dump_json()
         data = json.loads(json_data)

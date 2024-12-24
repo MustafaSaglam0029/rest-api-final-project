@@ -1,11 +1,15 @@
-from fastapi import FastAPI
+from fastapi import APIRouter
+from src.routers.meter_readings_router import logger
 from src.utils.db_connection import conn
 
+readings_get_router = APIRouter()
 
-app = FastAPI()
 
-@app.get("/meter_readings/")
+@readings_get_router.get("/meter_readings/")
 async def get_meter_readings_data(account_id: str | None = None, connection_ean_code: str | None = None ):
+
+    logger.info(f"Received GET request for meter_readings_data")
+
     try:
         con = conn()
         cur = con.cursor()

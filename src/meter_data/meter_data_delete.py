@@ -1,11 +1,14 @@
-from fastapi import FastAPI
+from src.routers.meter_router import logger
+from fastapi import APIRouter
 from src.utils.db_connection import conn
 
-app = FastAPI()
+meter_del_router = APIRouter()
 
 
-@app.delete('/meter/{business_partner_id}')
+@meter_del_router.delete('/meter/{business_partner_id}')
 async def delete_meter_data(business_partner_id:str):
+
+        logger.info(f"Received DELETE request for meter {business_partner_id}")
 
         try:
                 con = conn()

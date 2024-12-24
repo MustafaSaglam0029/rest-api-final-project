@@ -1,14 +1,16 @@
-from fastapi import FastAPI
 import json
 from src.models.mandate_data_model import MandateData
+from fastapi import APIRouter
+from src.routers.mandate_router import logger
 from src.utils.db_connection import conn
 
+mandate_post_router = APIRouter()
 
-app = FastAPI()
 
-
-@app.post('/mandate/')
+@mandate_post_router.post('/mandate/')
 async def post_mandate_data(mandate_data:MandateData):
+
+        logger.info(f"Received POST request for mandate_data")
 
         json_data = mandate_data.model_dump_json()
         data = json.loads(json_data)

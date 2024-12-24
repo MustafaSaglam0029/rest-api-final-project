@@ -1,14 +1,16 @@
-import uvicorn
-from fastapi import FastAPI
-from src.models.mandate_data_model import IncomingMandateData
-from src.utils.db_connection import conn
 from src.utils.get_status import get_status
+from src.models.mandate_data_model import IncomingMandateData
+from fastapi import APIRouter
+from src.routers.mandate_router import logger
+from src.utils.db_connection import conn
 
-app = FastAPI()
+mandate_put_router = APIRouter()
 
 
-@app.put('/mandate/{business_partner_id}')
+@mandate_put_router.put('/mandate/{business_partner_id}')
 async def put_mandate_data(business_partner_id:str, incoming_data:IncomingMandateData):
+
+        logger.info(f"Received PUT request for mandate {business_partner_id}")
 
         json_data = incoming_data.model_dump_json()
         status = get_status(json_data)
@@ -30,8 +32,7 @@ async def put_mandate_data(business_partner_id:str, incoming_data:IncomingMandat
                         con.close()
 
         return {"status_code": 200,
-                "body": {"message": f"Request is commited successfully"}}
+                "body": {"message": f"Request for {business_partner_id} commited successfully"}}
 
 
 
-uvicorn.run(app, port=8080)
