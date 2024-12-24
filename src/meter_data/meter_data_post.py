@@ -1,12 +1,16 @@
-from fastapi import FastAPI
 import json
 from src.models.meter_data_model import MeterData
+from src.routers.meter_router import logger
+from fastapi import APIRouter
 from src.utils.db_connection import conn
 
-app = FastAPI()
+meter_post_router = APIRouter()
 
-@app.post('/meter/')
+
+@meter_post_router.post('/meter/')
 async def post_meter_data(meter_data:MeterData):
+
+        logger.info(f"Received POST request for meter_data")
 
         json_data = meter_data.model_dump_json()
         data = json.loads(json_data)

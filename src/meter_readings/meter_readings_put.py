@@ -1,12 +1,16 @@
-from fastapi import FastAPI
-from src.models.meter_readings_model  import IncomingMeterReadings
-from src.utils.db_connection import conn
 from src.utils.get_status import get_status
+from src.models.meter_readings_model import IncomingMeterReadings
+from fastapi import APIRouter
+from src.utils.db_connection import conn
+from src.routers.meter_readings_router import logger
 
-app = FastAPI()
+readings_put_router = APIRouter()
 
-@app.put('/meter_readings/{account_id}')
+
+@readings_put_router.put('/meter_readings/{account_id}')
 async def put_meter_readings(account_id:str, incoming_data:IncomingMeterReadings):
+
+        logger.info(f"Received PUT request for meter_readings {account_id}")
 
         json_data = incoming_data.model_dump_json()
         status = get_status(json_data)
@@ -28,6 +32,6 @@ async def put_meter_readings(account_id:str, incoming_data:IncomingMeterReadings
                         con.close()
 
         return {"status_code": 200,
-                "body": {"message": f"Request is commited successfully"}}
+                "body": {"message": f"Request for {account_id} is commited successfully"}}
 
 
